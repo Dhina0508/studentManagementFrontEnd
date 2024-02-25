@@ -1,0 +1,32 @@
+<table>
+ 
+    <tr>
+      <th>Full Name</th>
+      <th>Email</th>
+      <th>Mobile</th>
+      <th>Address</th>
+      <th>Graduated</th>
+      <th><span (click)="logOut()" class="logoutIcon"> <fa-icon [icon]="faLogout" ></fa-icon></span></th>
+    </tr>
+
+
+    <tr *ngFor="let item of studentInfo" class="edit-delete-icons">
+      <td>{{ item.fullName }}</td>
+      <td>{{ item.email }}</td>
+      <td>{{ item.mobile }}</td>
+      <td>{{ item.address }}</td>
+      <td>{{ item.graduated ? "Yes" : "No" }}</td>
+      <td>
+        <div class="twoIcons">
+        <span matTooltip="Edit" class="tooltip-icon" (click)="editStudent(item.id)">
+          <fa-icon [icon]="faEdit"></fa-icon>
+        </span>
+        <span matTooltip="Delete" class="tooltip-icon" (click)="deleteStudent(item.id)">
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </span>
+      </div>
+ 
+</table>
+<button (click)="addStudent()">
+  <fa-icon [icon]="faAdd"></fa-icon>
+</button>
