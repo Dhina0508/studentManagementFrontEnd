@@ -15,11 +15,14 @@ export class StudentServiceFlowService {
     this.apiEndpoint=environments.APIENDPOINT;
   }
   onLogin(obj:any):Observable<any>{
-    return this.http.post(this.apiEndpoint+constants.ENDPOINTS.LOGIN,obj);
+    return this.http.post(this.apiEndpoint+constants.ENDPOINTS.LOGIN,obj);  
+  }
+  onRegister(obj:any):Observable<any>{
+    return this.http.post(this.apiEndpoint+constants.ENDPOINTS.REGISTER,obj);
   }
 
-  getAllStudentsInfo():Observable<StudentResponseModel>{
-    return this.http.get<StudentResponseModel>(this.apiEndpoint+constants.ENDPOINTS.STUDENT);
+  getAllStudentsInfo(count:number,page:number):Observable<any>{
+    return this.http.get<any>(this.apiEndpoint+constants.ENDPOINTS.STUDENT+"?page="+page+"&count="+count);
   }
 
   getStudentsInfoById(id:number):Observable<StudentResponseModel>{

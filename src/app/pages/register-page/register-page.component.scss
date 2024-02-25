@@ -4,7 +4,7 @@ h1 {
     margin-bottom: 20px;
   }
   
-  .loginPage{
+  .registerPage{
     width: 90%;
     max-width: 450px;
     align-items: center;
@@ -26,7 +26,7 @@ h1 {
     padding-bottom: 5px;
   }
   
-  input[type="email"],
+  input[type="email"],input[type="text"],
   input[type="password"] {
     width: 100%;
     padding: 8px;
@@ -74,7 +74,7 @@ h1 {
     font-size: 12px;
   }
 
-  .register{
+  .login{
     text-align: right;
     font-size: 14px;
     color: white;
@@ -82,7 +82,7 @@ h1 {
     padding-top: 10px;
 
   }
-  .register:hover{
+  .login:hover{
     cursor: pointer;
     text-decoration: underline;
   }

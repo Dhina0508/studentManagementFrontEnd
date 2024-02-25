@@ -23,7 +23,7 @@ table {
   tr:hover {
     background-color: #eed1f7e3;
   }
-  button {
+  .addStudentButton {
     position: fixed;
     bottom: 50px;
     right: 40px;
@@ -34,11 +34,11 @@ table {
     border: none;
   }
   
-  button:hover {
+  .addStudentButton:hover {
     cursor: pointer;
     box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.16); /* Add a larger shadow on hover */
   }
-  button fa-icon{
+  .addStudentButton fa-icon{
     font-size: large;
     color: white;
   }
@@ -62,3 +62,62 @@ table {
   .logoutIcon{
     cursor: pointer;
   }
+
+  .buttons{
+    width: fit-content;
+    height: 80px;
+    padding: 10px;
+    display: flex;
+    background-color: #f9d6f996;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem ;
+    position: fixed;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%)
+
+  }
+  .buttons button{
+    width: 50px;
+    height: 30px;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    background-color: #c868fc;
+cursor: pointer;
+  }
+
+
+  select{
+    width: 43px;
+    height: 30px;
+    border-radius: 5px;
+    padding-left: 3px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .buttons button:disabled{
+    background-color: rgb(248, 229, 250);
+    cursor:default;
+  }
+
+  .number{
+    font-size:17px;
+    font-weight: 800;
+  }
+
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25px; 
+    width: 25px; 
+    border: 2px solid rgba(0, 0, 0, 0.468); 
+    border-radius: 3px; 
+    background-color: white;
+  }
+  

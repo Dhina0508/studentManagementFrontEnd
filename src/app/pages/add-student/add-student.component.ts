@@ -37,7 +37,7 @@ loadStudentInfoById(id:number) {
       this.student = res.data;
     },
     (error) => {
-      alert('Error Occured' + JSON.stringify(error));
+      alert('Error Occured' + JSON.stringify(error.message));
     }
   );
 }
@@ -51,6 +51,7 @@ loadStudentInfoById(id:number) {
        
         this.student = { fullName: '', email: '', mobile: '', address: '', graduated: false };
       }, error => {
+        alert('Error adding student:'+JSON.stringify(error.message))
         console.error('Error adding student:', error);
       });
     }else{
@@ -60,6 +61,7 @@ loadStudentInfoById(id:number) {
       this.router.navigate(['home']);
         this.student = { fullName: '', email: '', mobile: '', address: '', graduated: false };
       }, error => {
+        alert('Error Updating student:'+JSON.stringify(error.message))
         console.error('Error Updating student:', error);
       });
 

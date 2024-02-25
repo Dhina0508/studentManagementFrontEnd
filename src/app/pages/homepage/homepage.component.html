@@ -1,3 +1,5 @@
+<div>
+  
 <table>
  
     <tr>
@@ -27,6 +29,16 @@
       </div>
  
 </table>
-<button (click)="addStudent()">
+<div class="buttons">
+  <select [(ngModel)]="dataPerPage" (change)="selectCount($event)">
+    <option *ngFor="let options of counts">{{options}}</option>
+  </select>
+  <button [disabled]="currentPageNumber==1" (click)="previousPage()"> <fa-icon [icon]="leftArrow"></fa-icon></button>
+  <div class="container">
+  <div class="number">{{currentPageNumber}}</div></div>
+  <button (click)="nextPage()"  [disabled]="currentPageNumber==totalpages"> <fa-icon [icon]="rightArrow"></fa-icon></button>
+</div>
+<button class="addStudentButton"  (click)="addStudent()">
   <fa-icon [icon]="faAdd"></fa-icon>
 </button>
+</div>
