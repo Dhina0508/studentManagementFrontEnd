@@ -10,7 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AddStudentComponent } from './pages/add-student/add-student.component'
 import { CustomInterceptor } from './services/custom.interceptor';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,7 +24,8 @@ import { RegisterPageComponent } from './pages/register-page/register-page.compo
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ReactiveFormsModule
   ],
   providers: [
     {

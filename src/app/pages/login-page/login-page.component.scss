@@ -82,7 +82,14 @@ h1 {
     padding-top: 10px;
 
   }
+  
   .register:hover{
     cursor: pointer;
     text-decoration: underline;
+  }
+
+  .text-danger{
+    font-size: 10px;
+    font-weight:300;
+    color: red;
   }

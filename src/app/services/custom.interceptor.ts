@@ -6,6 +6,8 @@ import {
   HttpInterceptor,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { constants } from '../constants/constants';
+import { environments } from '../environments/environments';
 
 @Injectable()
 export class CustomInterceptor implements HttpInterceptor {
@@ -15,6 +17,12 @@ export class CustomInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
+    if (
+      request.url.includes(environments.APIENDPOINT+constants.ENDPOINTS.LOGIN) ||
+      request.url.includes(environments.APIENDPOINT+constants.ENDPOINTS.REGISTER)
+    ) {
+      return next.handle(request);
+    }
     const access_token = localStorage.getItem('token');
     if (access_token) {
       request = request.clone({

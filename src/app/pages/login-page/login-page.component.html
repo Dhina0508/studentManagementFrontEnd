@@ -1,9 +1,17 @@
 <div class="fullScreen">
   <div class="loginPage">
     <h1>Welcome Back</h1>
-    <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+    <form #loginForm="ngForm"  (ngSubmit)="onSubmit()">
+      <form [formGroup]="form">
+        <div class="form-group">
       <label for="email" class="email">Email</label>
-      <input type="email" id="email" name="email"  placeholder="Enter your Login Id"  class="form-control" [(ngModel)]="user.username" required />
+      <input type="email" id="email"  formControlName="email" name="email"  placeholder="Enter your Login Id"  class="form-control" [(ngModel)]="user.username" required />
+      <label class="text-danger" *ngIf="getEmailError(form.get('email'))">
+        {{
+            getEmailError(form.get('email'))
+        }}
+    </label>
+        </div></form>
 
       <label for="password" class="password">Password</label>
       <input

@@ -6,7 +6,7 @@ import {
 import { StudentServiceFlowService } from 'src/app/services/student-service-flow.service';
 import { faAdd,faEdit, faTrash,faArrowRightFromBracket ,faArrowRight,faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
-
+import { AsyncSubject } from 'rxjs';
 
 @Component({
   selector: 'app-homepage',
@@ -42,19 +42,15 @@ totalData:number=0;
   loadAllStudentInfo() {
     this.studentservice.getAllStudentsInfo(this.dataPerPage,this.currentPageNumber).subscribe(
       (res: any) => {
-        console.log( res.data);
-        console.log(res.total_data);
-        
-        
         this.studentInfo = res.data;
         this.totalData=res.total_data;
         this.totalpages=this.getTotalPages();
         
-      
       },
       (error) => {
         alert('Error Occured' + JSON.stringify(error.message));
         console.log(error.message);
+        this.router.navigate(['login'])
         
       }
     );
@@ -72,7 +68,7 @@ totalData:number=0;
     this.studentservice.deleteStudentInfo(id).subscribe((res:any)=>{
   console.log("deleted");
   alert("Student Deleted Successfully");
-  window.location.reload();
+  this.loadAllStudentInfo();
     }, (error) => {
       alert('Error Occured' + JSON.stringify(error));
     })  
@@ -85,6 +81,7 @@ totalData:number=0;
 
 
 
+
     logOut() {
       localStorage.clear()
       this.router.navigate(['login'])
@@ -94,7 +91,9 @@ totalData:number=0;
       selectCount(event: Event):void {
         let target=event.target as HTMLSelectElement;
         this.dataPerPage=parseInt(target.value);
+        this.currentPageNumber=1;
         this.loadAllStudentInfo();
+        
         }
 
         nextPage():void{

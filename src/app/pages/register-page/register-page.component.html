@@ -4,18 +4,34 @@
       <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
         <label for="name" class="name">Name</label>
         <input type="text" id="name" name="name"  placeholder="Enter your Name"  class="form-control" [(ngModel)]="user.first_name" required />
+        <form [formGroup]="form">
+          <div class="form-group">
         <label for="email" class="email">Email</label>
-        <input type="email" id="email" name="email"  placeholder="Enter your Email Id"  class="form-control" [(ngModel)]="user.username" required />
-  
+        <input type="email" formControlName="email" id="email" name="email"  placeholder="Enter your Email Id"  class="form-control" [(ngModel)]="user.username" required />
+        <label class="text-danger" *ngIf="getEmailError(form.get('email'))">
+          {{
+              getEmailError(form.get('email'))
+          }}
+      </label>
+          </div></form>
+          <form [formGroup]="form">
+            <div class="form-group">
         <label for="password" class="password">Password</label>
         <input
           type="password"
           id="password"
+          formControlName="password"
           name="password"
           placeholder="Enter Password"
           class="form-control"
           [(ngModel)]="user.password" required
         />
+        <label class="text-danger" *ngIf="getPasswordError(form.get('password'))">
+          {{
+              getPasswordError(form.get('password'))
+          }}
+      </label>
+          </div></form>
   
         <button type="submit" class="registerButton">Register</button>
         <div class="login" (click)="login()">Already have an Account?</div>
