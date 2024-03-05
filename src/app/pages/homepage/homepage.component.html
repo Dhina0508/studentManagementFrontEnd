@@ -1,8 +1,10 @@
 <div>
-  
+  <app-add-student *ngIf="studentservice.isPopupVisible" (reloadStudentInfo)="loadAllStudentInfo()" (resestId)="resetId($event)" [studentId]=id ></app-add-student>
+
 <table>
  
     <tr>
+      <th>Pofile</th>
       <th>Full Name</th>
       <th>Email</th>
       <th>Mobile</th>
@@ -12,7 +14,9 @@
     </tr>
 
 
-    <tr *ngFor="let item of studentInfo" class="edit-delete-icons">
+    <tr *ngFor="let item of studentDetails" class="edit-delete-icons">
+      <td>
+      <img  [src]= "'http://127.0.0.1:8000' + item.image"  onerror="this.src='https://i.pinimg.com/736x/ce/ca/c6/cecac6f4aa6f2bafb4798b151a8bd4c3.jpg'" alt="Image" ></td>
       <td>{{ item.fullName }}</td>
       <td>{{ item.email }}</td>
       <td>{{ item.mobile }}</td>
@@ -23,13 +27,17 @@
         <span matTooltip="Edit" class="tooltip-icon" (click)="editStudent(item.id)">
           <fa-icon [icon]="faEdit"></fa-icon>
         </span>
+
         <span matTooltip="Delete" class="tooltip-icon" (click)="deleteStudent(item.id)">
           <fa-icon [icon]="faTrash"></fa-icon>
         </span>
       </div>
+
  
 </table>
+
 <div class="buttons">
+  
   <select [(ngModel)]="dataPerPage" (change)="selectCount($event)">
     <option *ngFor="let options of counts">{{options}}</option>
   </select>
@@ -38,7 +46,8 @@
   <div class="number">{{currentPageNumber}}</div></div>
   <button (click)="nextPage()"  [disabled]="currentPageNumber==totalpages"> <fa-icon [icon]="rightArrow"></fa-icon></button>
 </div>
-<button class="addStudentButton"  (click)="addStudent()">
+<button class="addStudentButton"  (click)="showPopup()">
   <fa-icon [icon]="faAdd"></fa-icon>
 </button>
+
 </div>

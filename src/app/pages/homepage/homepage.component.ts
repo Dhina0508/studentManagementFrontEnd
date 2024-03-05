@@ -6,7 +6,7 @@ import {
 import { StudentServiceFlowService } from 'src/app/services/student-service-flow.service';
 import { faAdd,faEdit, faTrash,faArrowRightFromBracket ,faArrowRight,faArrowLeft} from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
-import { AsyncSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-homepage',
@@ -20,6 +20,8 @@ counts:any=[5,10,20,50]
 dataPerPage:number=this.counts[0]
 totalpages:number=0;
 totalData:number=0;
+id:number=0;
+imageUrl:any;
 
   faAdd = faAdd;
   faEdit = faEdit;
@@ -29,13 +31,29 @@ totalData:number=0;
   leftArrow=faArrowLeft;
   
   studentInfo: StudentInfoModel[] = [];
+  studentDetails: StudentInfoModel[] = [];
+
+  public studentData=new Subject<StudentInfoModel[]>();
   constructor(
-    private studentservice: StudentServiceFlowService,
+    public studentservice: StudentServiceFlowService,
     private router: Router
   ) {}
+
+
+
+
+
   ngOnInit(): void {
     this.loadAllStudentInfo();
+    this.studentData.subscribe((res:StudentInfoModel[])=>{
+      this.studentDetails=res;
+     })
   }
+
+  ngOnDestroy() {
+    this.studentData.unsubscribe();
+  }
+
 
 
 
@@ -44,7 +62,10 @@ totalData:number=0;
       (res: any) => {
         this.studentInfo = res.data;
         this.totalData=res.total_data;
+        this.imageUrl=res.data['image']
         this.totalpages=this.getTotalPages();
+        this.getAvailableData();
+        console.log(res.data)
         
       },
       (error) => {
@@ -56,10 +77,8 @@ totalData:number=0;
     );
   }
 
-
-
-  addStudent(): void {
-    this.router.navigate(['add_student']);
+  getAvailableData() {
+   this.studentData.next(this.studentInfo);
   }
 
 
@@ -74,10 +93,6 @@ totalData:number=0;
     })  
   }
 
-
-  editStudent(id: number) {
-    this.router.navigate(['add_student', id]);
-    }
 
 
 
@@ -115,6 +130,43 @@ this.loadAllStudentInfo();
               return Math.ceil(this.totalData/this.dataPerPage)
             }
             return 0;
-        }        
- 
+        }   
+        
+        
+
+
+   
+
+        showPopup() {
+          this.studentservice.showPopup();   
+        }
+      
+        closePopup() {
+          this.studentservice.closePopup();
+          this.loadAllStudentInfo();
+        }
+
+        editStudent(id:number){
+            this.id=id
+            this.showPopup();
+          }
+
+          resetId(id:number){
+            this.id=id
+
+          }
+
+          
+  basePath: string = 'http://127.0.0.1:8000/media/images/';
+
+  getImageUrl(): string {
+   const fileName = this.extractFileName(this.imageUrl);
+   const encodedFileName = encodeURIComponent(fileName);
+   console.log(this.basePath + encodedFileName);
+   return this.basePath + encodedFileName;
+ }
+
+ private extractFileName(filePath: any): string {
+   return filePath.split('\\').pop();
+ }
 }

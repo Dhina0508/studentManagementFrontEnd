@@ -1,24 +1,71 @@
+<div class="bgOverlay"></div>
 <div class="fullScreen">
-    <div class="loginPage">
+  <div class="loginPage">
+    <form (ngSubmit)="onSubmit()" #studentForm="ngForm">
+      <div class="rowTextAndIcon">
+      <h2>Student Info</h2>
+      <fa-icon [icon]="closeIcon" (click)="closePopup()" class="closeIcon"></fa-icon>
+    </div>
+    <label for="profile">Select Profile:</label>
+    <label class="image-upload-label">
+      <input type="file" (change)="onFileSelected($event)" *ngIf="studentId==0 && !selectedFile">
 
-<form (ngSubmit)="onSubmit()" #studentForm="ngForm">
-    <h2>Student Info</h2>
-  <label for="fullName">Full Name:</label>
-  <input type="text" id="fullName" name="fullName" placeholder="Enter Student Name" [(ngModel)]="student.fullName" required>
+      <input type="file" class="editingFile" (change)="onFileSelected($event)" *ngIf="studentId!=0||selectedFile" style= "display: none;">
+      <img *ngIf="student.image && !selectedFile"  [src]="'http://127.0.0.1:8000' + student.image" onerror="this.src='https://i.pinimg.com/736x/ce/ca/c6/cecac6f4aa6f2bafb4798b151a8bd4c3.jpg'" height="80px" width="80px" alt="Selected Image">
+      <img class="newImage" *ngIf="selectedFile" [src]="selectedImageUrl" onerror="this.src='https://i.pinimg.com/736x/ce/ca/c6/cecac6f4aa6f2bafb4798b151a8bd4c3.jpg'" height="100px" width="100px" alt="Selected Image">
+  </label>
+   
+      <label for="fullName">Full Name:</label>
+      <input
+        type="text"
+        id="fullName"
+        name="fullName"
+        placeholder="Enter Student Name"
+        [(ngModel)]="student.fullName"
+        required
+      />
 
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email" placeholder="Enter Student Email" [(ngModel)]="student.email" required>
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Enter Student Email"
+        [(ngModel)]="student.email"
+        required
+      />
 
-  <label for="mobile">Mobile:</label>
-  <input type="text" id="mobile" name="mobile" placeholder="Enter Student Contact Number" [(ngModel)]="student.mobile" required>
+      <label for="mobile">Mobile:</label>
+      <input
+        type="text"
+        id="mobile"
+        name="mobile"
+        placeholder="Enter Student Contact Number"
+        [(ngModel)]="student.mobile"
+        required
+      />
 
-  <label for="address">Address:</label>
-  <input type="text" id="address" name="address" placeholder="Enter Student Address" [(ngModel)]="student.address" required>
-<div class="graduated">
-  <label for="graduated" id="graduated">Graduated:</label>
-  <input type="checkbox" id="graduated" name="graduated" [(ngModel)]="student.graduated">
-</div>
-  <button type="submit">Submit</button>
-</form>
-</div>
+      <label for="address">Address:</label>
+      <input
+        type="text"
+        id="address"
+        name="address"
+        placeholder="Enter Student Address"
+        [(ngModel)]="student.address"
+        required
+      />
+      <div class="graduated">
+        <label for="graduated" id="graduated">Graduated:</label>
+        <input
+          type="checkbox"
+          id="graduated"
+          name="graduated"
+          [(ngModel)]="student.graduated"
+        />
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+   
+  </div>
+ 
 </div>

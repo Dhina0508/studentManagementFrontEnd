@@ -9,6 +9,7 @@ import { constants } from '../constants/constants';
   providedIn: 'root'
 })
 export class StudentServiceFlowService {
+  isPopupVisible = false;
 
   constructor(private http:HttpClient) { 
   }
@@ -29,5 +30,13 @@ export class StudentServiceFlowService {
    
   deleteStudentInfo(id: number): Observable<any> {
    return this.http.delete(environments.APIENDPOINT+constants.ENDPOINTS.STUDENT+id);
+  }
+
+  showPopup() {
+    this.isPopupVisible = true;
+  }
+
+  closePopup() {
+    this.isPopupVisible = false;
   }
 }

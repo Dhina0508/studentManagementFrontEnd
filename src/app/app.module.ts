@@ -11,6 +11,7 @@ import { AddStudentComponent } from './pages/add-student/add-student.component'
 import { CustomInterceptor } from './services/custom.interceptor';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { StudentServiceFlowService } from './services/student-service-flow.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,7 +32,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     {
       provide:HTTP_INTERCEPTORS,useClass:CustomInterceptor,
       multi:true
-    }
+    },
+    StudentServiceFlowService
   ],
   bootstrap: [AppComponent]
 })

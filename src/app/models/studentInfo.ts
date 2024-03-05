@@ -5,6 +5,7 @@ export interface StudentInfoModel{
     mobile: number,
     address: string,
     graduated: boolean
+    image:File
 }
 
 export interface StudentResponseModel{
@@ -18,5 +19,6 @@ export interface Student {
     mobile: number;
     address: string;
     graduated: boolean;
+    image:File
   }
   
