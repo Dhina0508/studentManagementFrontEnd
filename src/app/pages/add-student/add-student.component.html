@@ -1,7 +1,12 @@
+
 <div class="bgOverlay"></div>
-<div class="fullScreen">
+
+<div class="fullScreen" >
+
   <div class="loginPage">
-    <form (ngSubmit)="onSubmit()" #studentForm="ngForm">
+   
+    
+    <form (ngSubmit)="onSubmit()" #studentForm="ngForm" >
       <div class="rowTextAndIcon">
       <h2>Student Info</h2>
       <fa-icon [icon]="closeIcon" (click)="closePopup()" class="closeIcon"></fa-icon>
@@ -11,7 +16,7 @@
       <input type="file" (change)="onFileSelected($event)" *ngIf="studentId==0 && !selectedFile">
 
       <input type="file" class="editingFile" (change)="onFileSelected($event)" *ngIf="studentId!=0||selectedFile" style= "display: none;">
-      <img *ngIf="student.image && !selectedFile"  [src]="'http://127.0.0.1:8000' + student.image" onerror="this.src='https://i.pinimg.com/736x/ce/ca/c6/cecac6f4aa6f2bafb4798b151a8bd4c3.jpg'" height="80px" width="80px" alt="Selected Image">
+      <img *ngIf="student.image && !selectedFile"  [src]="localHost + student.image" onerror="this.src='https://i.pinimg.com/736x/ce/ca/c6/cecac6f4aa6f2bafb4798b151a8bd4c3.jpg'" height="80px" width="80px" alt="Selected Image">
       <img class="newImage" *ngIf="selectedFile" [src]="selectedImageUrl" onerror="this.src='https://i.pinimg.com/736x/ce/ca/c6/cecac6f4aa6f2bafb4798b151a8bd4c3.jpg'" height="100px" width="100px" alt="Selected Image">
   </label>
    
@@ -64,8 +69,10 @@
         />
       </div>
       <button type="submit">Submit</button>
+      
     </form>
-   
+    <button type="submit" class="cancelBtn" (click)="onCancel()">Cancel</button>
+      
   </div>
  
 </div>

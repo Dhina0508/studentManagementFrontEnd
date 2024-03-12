@@ -1,22 +1,50 @@
-<div>
-  <app-add-student *ngIf="studentservice.isPopupVisible" (reloadStudentInfo)="loadAllStudentInfo()" (resestId)="resetId($event)" [studentId]=id ></app-add-student>
 
-<table>
- 
+
+  <app-add-student
+    *ngIf="studentservice.isPopupVisibleForDummyData"
+    (reloadStudentInfo)="loadAllStudentInfo()"
+    (resestId)="resetId($event)"
+    [studentId]="id"
+  ></app-add-student>
+  <app-array-method [studentInfo]="studentInfo" 
+    *ngIf="studentservice.isPopupVisibleForArrayMethods"
+  ></app-array-method>
+
+  <table>
     <tr>
-      <th>Pofile</th>
-      <th>Full Name</th>
-      <th>Email</th>
+      <th>Pofile
+       
+      </th>
+      <th (click)="toggleButton()">Full Name
+        <div *ngIf="isSortOpt" class="button-container">
+          <button class="sort"  (click)="sortName()"><fa-icon [icon]="sort"></fa-icon></button>
+          <button class="edit"><fa-icon [icon]="search"></fa-icon></button>
+        </div>
+      </th>
+      <th (click)="toggleButton()">Email
+        <div *ngIf="isSortOpt" class="button-container">
+          <button class="sort"  (click)="sortEmail()"><fa-icon [icon]="sort"></fa-icon></button>
+          <button class="edit"><fa-icon [icon]="search"></fa-icon></button>
+        </div>
+      </th>
       <th>Mobile</th>
       <th>Address</th>
       <th>Graduated</th>
-      <th><span (click)="logOut()" class="logoutIcon"> <fa-icon [icon]="faLogout" ></fa-icon></span></th>
+      <th>
+        <span (click)="logOut()" class="logoutIcon">
+          <fa-icon [icon]="faLogout"></fa-icon
+        ></span>
+      </th>
     </tr>
-
 
     <tr *ngFor="let item of studentDetails" class="edit-delete-icons">
       <td>
-      <img  [src]= "'http://127.0.0.1:8000' + item.image"  onerror="this.src='https://i.pinimg.com/736x/ce/ca/c6/cecac6f4aa6f2bafb4798b151a8bd4c3.jpg'" alt="Image" ></td>
+        <img
+          [src]="'http://127.0.0.1:8000' + item.image"
+          onerror="this.src='https://i.pinimg.com/736x/ce/ca/c6/cecac6f4aa6f2bafb4798b151a8bd4c3.jpg'"
+          alt="Image"
+        />
+      </td>
       <td>{{ item.fullName }}</td>
       <td>{{ item.email }}</td>
       <td>{{ item.mobile }}</td>
@@ -24,30 +52,50 @@
       <td>{{ item.graduated ? "Yes" : "No" }}</td>
       <td>
         <div class="twoIcons">
-        <span matTooltip="Edit" class="tooltip-icon" (click)="editStudent(item.id)">
-          <fa-icon [icon]="faEdit"></fa-icon>
-        </span>
+          <span
+            matTooltip="Edit"
+            class="tooltip-icon"
+            (click)="editStudent(item.id)"
+          >
+            <fa-icon [icon]="faEdit"></fa-icon>
+          </span>
 
-        <span matTooltip="Delete" class="tooltip-icon" (click)="deleteStudent(item.id)">
-          <fa-icon [icon]="faTrash"></fa-icon>
-        </span>
-      </div>
+          <span
+            matTooltip="Delete"
+            class="tooltip-icon"
+            (click)="deleteStudent(item.id)"
+          >
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </span>
+        </div>
+      </td>
+    </tr>
+  </table>
 
- 
-</table>
+  <div class="buttons">
+    <select [(ngModel)]="dataPerPage" (change)="selectCount($event)">
+      <option *ngFor="let options of counts">{{ options }}</option>
+    </select>
 
-<div class="buttons">
-  
-  <select [(ngModel)]="dataPerPage" (change)="selectCount($event)">
-    <option *ngFor="let options of counts">{{options}}</option>
-  </select>
-  <button [disabled]="currentPageNumber==1" (click)="previousPage()"> <fa-icon [icon]="leftArrow"></fa-icon></button>
-  <div class="container">
-  <div class="number">{{currentPageNumber}}</div></div>
-  <button (click)="nextPage()"  [disabled]="currentPageNumber==totalpages"> <fa-icon [icon]="rightArrow"></fa-icon></button>
-</div>
-<button class="addStudentButton"  (click)="showPopup()">
-  <fa-icon [icon]="faAdd"></fa-icon>
-</button>
+    <button [disabled]="currentPageNumber == 1" (click)="previousPage()">
+      <fa-icon [icon]="leftArrow"></fa-icon>
+    </button>
+    <div class="container">
+      <div class="number">{{ currentPageNumber }}</div>
+    </div>
+    <button (click)="nextPage()" [disabled]="currentPageNumber == totalpages">
+      <fa-icon [icon]="rightArrow"></fa-icon>
+    </button>
+    <div class="extra">
+      <h6 (click)="goToDummyData()">Show Dummy Data</h6>
 
-</div>
+      <fa-icon
+        class="comment"
+        (click)="showArraymethodPopup()"
+        [icon]="comment"
+      ></fa-icon>
+    </div>
+  </div>
+  <button class="addStudentButton" (click)="showDummyDataPopup()">
+    <fa-icon [icon]="faAdd"></fa-icon>
+  </button>

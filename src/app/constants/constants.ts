@@ -3,6 +3,7 @@ export const constants={
         REGISTER:'auth/register/',
         LOGIN:'auth/login/',
         REFRESH_TOKEN:'auth/refresh_token/',
-        STUDENT:'student/'
+        STUDENT:'student/',
+        EXTERNAL_DATA:'external-data'
     }
 }

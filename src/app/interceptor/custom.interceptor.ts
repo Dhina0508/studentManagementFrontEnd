@@ -17,9 +17,11 @@ export class CustomInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
+    
     if (
       request.url.includes(environments.APIENDPOINT+constants.ENDPOINTS.LOGIN) ||
-      request.url.includes(environments.APIENDPOINT+constants.ENDPOINTS.REGISTER)
+      request.url.includes(environments.APIENDPOINT+constants.ENDPOINTS.REGISTER)||
+      request.url.includes(environments.APIENDPOINT+constants.ENDPOINTS.EXTERNAL_DATA)
     ) {
       return next.handle(request);
     }

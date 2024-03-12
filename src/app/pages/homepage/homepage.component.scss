@@ -126,5 +126,38 @@ cursor: pointer;
     height:auto;
     width: min(50px);
     aspect-ratio: 1/1;
+  }
 
+  h6:hover{
+    text-decoration: underline;
+    cursor: pointer;
+    color: #c868fc;
+
+  }
+
+
+ 
+  .extra{
+    align-items: start;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+
+  }
+
+.comment:hover{
+color: #c868fc;
+cursor: pointer;
+  }
+
+  .button-container{
+    background-color: #c868fc;
+    display: flex;
+    justify-content: space-between;
+  }
+  .button-container button{
+    color: white;
+    background-color: #c868fc;
+    border: none;
+    cursor: pointer;
   }

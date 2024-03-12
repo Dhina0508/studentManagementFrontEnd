@@ -8,17 +8,24 @@ import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import { HomepageComponent } from './pages/homepage/homepage.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AddStudentComponent } from './pages/add-student/add-student.component'
-import { CustomInterceptor } from './services/custom.interceptor';
+import { CustomInterceptor } from './interceptor/custom.interceptor';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { StudentServiceFlowService } from './services/student-service-flow.service';
+import { DummyDataPageComponent } from './pages/dummy-data-page/dummy-data-page.component';
+import { LoadingInterceptor } from './interceptor/loading.interceptor';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ArrayMethodComponent } from './pages/array-method/array-method.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginPageComponent,
     HomepageComponent,
     AddStudentComponent,
-    RegisterPageComponent
+    RegisterPageComponent,
+    DummyDataPageComponent,
+    ArrayMethodComponent
   ],
   imports: [
     BrowserModule,
@@ -26,15 +33,22 @@ import { StudentServiceFlowService } from './services/student-service-flow.servi
     FormsModule,
     HttpClientModule,
     FontAwesomeModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatProgressSpinnerModule,
+    BrowserAnimationsModule
   ],
   providers: [
     {
       provide:HTTP_INTERCEPTORS,useClass:CustomInterceptor,
       multi:true
     },
-    StudentServiceFlowService
+    {
+      provide:HTTP_INTERCEPTORS,useClass:LoadingInterceptor,
+      multi:true
+    },
+   
   ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

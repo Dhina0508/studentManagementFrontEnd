@@ -1,19 +1,26 @@
-import { HttpClient, HttpErrorResponse   } from '@angular/common/http';
-import { Component, OnInit,Input, Output, EventEmitter } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy,
+} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { constants } from 'src/app/constants/constants';
 import { environments } from 'src/app/environments/environments';
 import { StudentResponseModel } from 'src/app/models/studentInfo';
 import { StudentServiceFlowService } from 'src/app/services/student-service-flow.service';
-import { faClose} from '@fortawesome/free-solid-svg-icons';
+import { faClose } from '@fortawesome/free-solid-svg-icons';
 import { __values } from 'tslib';
-
+import { LoadingService } from 'src/app/services/loading.service';
+import { Subject } from 'rxjs/internal/Subject';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-add-student',
@@ -21,19 +28,19 @@ import { __values } from 'tslib';
   styleUrls: ['./add-student.component.scss'],
 })
 export class AddStudentComponent implements OnInit {
+  localHost: string = environments.LOCALHOST;
   selectedFile: any;
- 
-  closeIcon=faClose;
-  @Input() studentId: number=0;
-  @Output() reloadStudentInfo=new EventEmitter<any>();
-  @Output() resestId=new EventEmitter<number>();
- 
+
+  closeIcon = faClose;
+  @Input() studentId: number = 0;
+  @Output() reloadStudentInfo = new EventEmitter<any>();
+  @Output() resestId = new EventEmitter<number>();
+ private unsubscribe$ = new Subject<void>();
 
   constructor(
     public studentservice: StudentServiceFlowService,
-    private http: HttpClient,
-    private router: Router,
-    private route: ActivatedRoute
+
+    public loadingService: LoadingService
   ) {}
   student = {
     fullName: '',
@@ -41,16 +48,14 @@ export class AddStudentComponent implements OnInit {
     mobile: '',
     address: '',
     graduated: false,
-    image:null
+    image: null,
   };
-
 
   ngOnInit(): void {
     if (this.studentId != 0) {
       this.loadStudentInfoById(this.studentId);
     }
   }
-
 
   loadStudentInfoById(id: number) {
     this.studentservice.getStudentsInfoById(id).subscribe(
@@ -63,67 +68,64 @@ export class AddStudentComponent implements OnInit {
     );
   }
 
-
   onSubmit() {
     const formData = new FormData();
-      for (const [key, value] of Object.entries(this.student)) {
-        if (key === 'image' && this.selectedFile) {
-          formData.append(key, this.selectedFile);
-        } else if (typeof value === 'boolean') {  
-          formData.append(key, value ? 'true' : 'false');
-        } else {
-          formData.append(key, value || '');
-        }
+    for (const [key, value] of Object.entries(this.student)) {
+      if (key === 'image' && this.selectedFile) {
+        formData.append(key, this.selectedFile);
+      } else if (typeof value === 'boolean') {
+        formData.append(key, value ? 'true' : 'false');
+      } else {
+        formData.append(key, value || '');
       }
+    }
 
     if (this.studentId == 0) {
-      this.http
-        .post(
-          environments.APIENDPOINT + constants.ENDPOINTS.STUDENT,
-          formData
-        )
+      this.studentservice
+        .addStudentInfo(formData)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
           (res: any) => {
             if (res.status == 'success') {
               alert('Student added successfully');
-              console.log(res.data)
+              console.log(res.data);
               this.student = {
                 fullName: '',
                 email: '',
                 mobile: '',
                 address: '',
                 graduated: false,
-                image:null
+                image: null,
               };
               this.reloadStudentInfo.emit();
-              this.studentservice.closePopup();
+              this.studentservice.closeDummyDataPopup();
             }
           },
           (error: HttpErrorResponse) => {
-            alert('Error while adding student: ' + error.error.message.email[0]);
+            alert(
+              'Error while adding student: ' + error.error.message.email[0]
+            );
           }
         );
     } else {
-      this.http
-        .patch(
-          environments.APIENDPOINT + constants.ENDPOINTS.STUDENT + this.studentId,
-         formData
-        )
+      this.studentservice
+        .editStudentInfo(formData, this.studentId)
+        .pipe(takeUntil(this.unsubscribe$))
         .subscribe(
           (response) => {
             alert('Student Updated successfully');
-            
+
             this.student = {
               fullName: '',
               email: '',
               mobile: '',
               address: '',
-              graduated: false,   
-              image:null
+              graduated: false,
+              image: null,
             };
             this.reloadStudentInfo.emit();
             this.resestId.emit(0);
-            this.studentservice.closePopup();
+            this.studentservice.closeDummyDataPopup();
           },
           (error) => {
             alert('Error Updating student:' + JSON.stringify(error.message));
@@ -147,7 +149,6 @@ export class AddStudentComponent implements OnInit {
       return 'Please enter valid email address!';
     else return '';
   }
-  
 
   customEmailValidator(control: AbstractControl) {
     const pattern = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,20}$/;
@@ -159,19 +160,24 @@ export class AddStudentComponent implements OnInit {
     else return null;
   }
 
-  closePopup(){
-    this.studentservice.closePopup();
+  closePopup() {
+    this.studentservice.closeDummyDataPopup();
     this.resestId.emit(0);
   }
 
+  selectedImageUrl: any;
 
-  selectedImageUrl:any;
-
-  onFileSelected(event:any): void {
+  onFileSelected(event: any): void {
     this.selectedFile = event.target.files[0];
-    console.log(this.selectedFile)
+    console.log(this.selectedFile);
     this.selectedImageUrl = URL.createObjectURL(this.selectedFile);
   }
-  
-  
+  onCancel() {
+    this.unsubscribe$.next();
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 }

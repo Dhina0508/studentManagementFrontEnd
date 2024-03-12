@@ -1,3 +1,4 @@
 export const environments= {
-    APIENDPOINT:'http://127.0.0.1:8000/api/v1/'
+    APIENDPOINT:'http://127.0.0.1:8000/api/v1/',
+    LOCALHOST:'http://127.0.0.1:8000'
 }

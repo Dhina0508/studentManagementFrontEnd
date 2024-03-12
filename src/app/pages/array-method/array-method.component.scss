@@ -1,0 +1,30 @@
+.fullScreen{
+    height:16vh;
+    width: min(50%,500px);
+    background-color:white;
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 20px;
+
+}
+
+.fullScreen .rowTextAndIcon{
+    display: flex;
+    justify-content: space-between;
+
+  }
+
+  h6{
+   font-size: medium;
+   font-weight: 600;
+   color:  black;
+  }
+  fa-icon{
+    cursor: pointer;
+  }
+
+  button{
+    cursor: pointer;
+  }

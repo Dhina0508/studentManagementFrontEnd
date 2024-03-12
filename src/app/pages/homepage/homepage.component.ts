@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {
   StudentInfoModel,
-  StudentResponseModel,
 } from 'src/app/models/studentInfo';
 import { StudentServiceFlowService } from 'src/app/services/student-service-flow.service';
-import { faAdd,faEdit, faTrash,faArrowRightFromBracket ,faArrowRight,faArrowLeft} from '@fortawesome/free-solid-svg-icons';
+import { faAdd,faEdit, faTrash,faArrowRightFromBracket ,faArrowRight,faArrowLeft,  faSort, faSearch, faMessage, faSortAlphaAsc} from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-homepage',
@@ -22,6 +22,7 @@ totalpages:number=0;
 totalData:number=0;
 id:number=0;
 imageUrl:any;
+isSortOpt:boolean=false;
 
   faAdd = faAdd;
   faEdit = faEdit;
@@ -29,6 +30,10 @@ imageUrl:any;
   faLogout=faArrowRightFromBracket;
   rightArrow=faArrowRight;
   leftArrow=faArrowLeft;
+  comment=faMessage;
+  search=faSearch;
+  sort=faSortAlphaAsc;
+
   
   studentInfo: StudentInfoModel[] = [];
   studentDetails: StudentInfoModel[] = [];
@@ -36,11 +41,8 @@ imageUrl:any;
   public studentData=new Subject<StudentInfoModel[]>();
   constructor(
     public studentservice: StudentServiceFlowService,
-    private router: Router
+    private router: Router,public loadingService:LoadingService,
   ) {}
-
-
-
 
 
   ngOnInit(): void {
@@ -49,13 +51,6 @@ imageUrl:any;
       this.studentDetails=res;
      })
   }
-
-  ngOnDestroy() {
-    this.studentData.unsubscribe();
-  }
-
-
-
 
   loadAllStudentInfo() {
     this.studentservice.getAllStudentsInfo(this.dataPerPage,this.currentPageNumber).subscribe(
@@ -132,23 +127,19 @@ this.loadAllStudentInfo();
             return 0;
         }   
         
-        
 
-
-   
-
-        showPopup() {
-          this.studentservice.showPopup();   
+        showDummyDataPopup() {
+          this.studentservice.showDummyDataPopup();   
         }
       
-        closePopup() {
-          this.studentservice.closePopup();
+        closeDummyDataPopup() {
+          this.studentservice.closeDummyDataPopup();
           this.loadAllStudentInfo();
         }
 
         editStudent(id:number){
             this.id=id
-            this.showPopup();
+            this.showDummyDataPopup();
           }
 
           resetId(id:number){
@@ -157,16 +148,65 @@ this.loadAllStudentInfo();
           }
 
           
-  basePath: string = 'http://127.0.0.1:8000/media/images/';
+  // basePath: string = 'http://127.0.0.1:8000/media/images/';
 
-  getImageUrl(): string {
-   const fileName = this.extractFileName(this.imageUrl);
-   const encodedFileName = encodeURIComponent(fileName);
-   console.log(this.basePath + encodedFileName);
-   return this.basePath + encodedFileName;
+//   getImageUrl(): string {
+//    const fileName = this.extractFileName(this.imageUrl);
+//    const encodedFileName = encodeURIComponent(fileName);
+//    console.log(this.basePath + encodedFileName);
+//    return this.basePath + encodedFileName;
+//  }
+
+//  private extractFileName(filePath: any): string {
+//    return filePath.split('\\').pop();
+//  }
+
+
+ goToDummyData(){
+  this.router.navigate(['dummyData'])
  }
 
- private extractFileName(filePath: any): string {
-   return filePath.split('\\').pop();
- }
+showArraymethodPopup() {
+  console.log("show array methods")
+  this.studentservice.toggleArrayMethodPopup();   
+}
+
+closeArrayMethodPopup() {
+  this.studentservice.closeArrayMethodPopup();
+}
+
+toggleButton(){
+  this.isSortOpt=!this.isSortOpt;
+}
+count:number=1
+sortName(){
+  this.count=this.count+1;
+  if(this.count%2==0){
+    this.studentDetails.sort((a, b) => {
+      return a.fullName.localeCompare(b.fullName);
+    });
+  }else{
+    this.studentDetails.sort((a, b) => {
+      return b.fullName.localeCompare(a.fullName);
+    });
+  }
+  this.toggleButton();
+}
+
+
+click:number=1
+sortEmail(){
+  this.click=this.click+1;
+  if(this.click%2==0){
+    this.studentDetails.sort((a, b) => {
+      return a.email.localeCompare(b.email);
+    });
+  }else{
+    this.studentDetails.sort((a, b) => {
+      return b.email.localeCompare(a.email);
+    });
+  }
+  this.toggleButton();
+  
+}
 }
