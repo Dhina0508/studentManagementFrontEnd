@@ -1,42 +1,97 @@
+<app-add-student
+  *ngIf="studentservice.isPopupVisibleForDummyData"
+  (reloadStudentInfo)="loadAllStudentInfo()"
+  (resestId)="resetId($event)"
+  [studentId]="id"
+></app-add-student>
+<app-array-method
+  [studentInfo]="studentInfo"
+  *ngIf="studentservice.isPopupVisibleForArrayMethods"
+></app-array-method>
 
+<table>
+  <tr>
+    <th>Pofile</th>
+    <th (click)="toggleButton()">
+      Full Name
+      <div *ngIf="isSortOpt" class="button-container">
+        <button class="sort" (click)="sortName()">
+          <fa-icon [icon]="sort"></fa-icon>
+        </button>
+        <button class="search" (click)="toggleSearchButton()">
+          <fa-icon [icon]="search"></fa-icon>
+        </button>
+      </div>
+      <input
+        type="text"
+        *ngIf="isSearched"
+        [(ngModel)]="searchStudWithName"
+        (keyup.enter)="searchStudentInfo()"        placeholder="Search by Name"
+      />
+    </th>
+    <th (click)="toggleButton()">
+      Email
+      <div *ngIf="isSortOpt" class="button-container">
+        <button class="sort" (click)="sortEmail()">
+          <fa-icon [icon]="sort"></fa-icon>
+        </button>
+        <button class="search" (click)="toggleSearchButton()">
+          <fa-icon [icon]="search"></fa-icon>
+        </button>
+      </div>
+      <input
+        type="text"
+        *ngIf="isSearched"
+        [(ngModel)]="searchStudWithEmail"
+        (keyup.enter)="searchStudentInfo()"
+        placeholder="Search by Email"
+      />
+    </th>
+    <th>Mobile</th>
+    <th>Address</th>
+    <th>Graduated</th>
+    <th>
+      <span (click)="logOut()" class="logoutIcon">
+        <fa-icon [icon]="faLogout"></fa-icon
+      ></span>
+    </th>
+  </tr>
+  <tbody *ngIf="searchStudWithName.length > 0 || searchStudWithEmail.length>0">
+    <tr *ngFor="let item of searchedStudents" class="edit-delete-icons">
+      <td>
+        <img
+          [src]="'http://127.0.0.1:8000' + item.image"
+          onerror="this.src='https://i.pinimg.com/736x/ce/ca/c6/cecac6f4aa6f2bafb4798b151a8bd4c3.jpg'"
+          alt="Image"
+        />
+      </td>
+      <td>{{ item.fullName }}</td>
+      <td>{{ item.email }}</td>
+      <td>{{ item.mobile }}</td>
+      <td>{{ item.address }}</td>
+      <td>{{ item.graduated ? "Yes" : "No" }}</td>
+      <td>
+        <div class="twoIcons">
+          <span
+            matTooltip="Edit"
+            class="tooltip-icon"
+            (click)="editStudent(item.id)"
+          >
+            <fa-icon [icon]="faEdit"></fa-icon>
+          </span>
 
-  <app-add-student
-    *ngIf="studentservice.isPopupVisibleForDummyData"
-    (reloadStudentInfo)="loadAllStudentInfo()"
-    (resestId)="resetId($event)"
-    [studentId]="id"
-  ></app-add-student>
-  <app-array-method [studentInfo]="studentInfo" 
-    *ngIf="studentservice.isPopupVisibleForArrayMethods"
-  ></app-array-method>
-
-  <table>
-    <tr>
-      <th>Pofile
-       
-      </th>
-      <th (click)="toggleButton()">Full Name
-        <div *ngIf="isSortOpt" class="button-container">
-          <button class="sort"  (click)="sortName()"><fa-icon [icon]="sort"></fa-icon></button>
-          <button class="edit"><fa-icon [icon]="search"></fa-icon></button>
+          <span
+            matTooltip="Delete"
+            class="tooltip-icon"
+            (click)="deleteStudent(item.id)"
+          >
+            <fa-icon [icon]="faTrash"></fa-icon>
+          </span>
         </div>
-      </th>
-      <th (click)="toggleButton()">Email
-        <div *ngIf="isSortOpt" class="button-container">
-          <button class="sort"  (click)="sortEmail()"><fa-icon [icon]="sort"></fa-icon></button>
-          <button class="edit"><fa-icon [icon]="search"></fa-icon></button>
-        </div>
-      </th>
-      <th>Mobile</th>
-      <th>Address</th>
-      <th>Graduated</th>
-      <th>
-        <span (click)="logOut()" class="logoutIcon">
-          <fa-icon [icon]="faLogout"></fa-icon
-        ></span>
-      </th>
+      </td>
     </tr>
-
+  </tbody>
+  <tbody *ngIf="searchStudWithName.length < 1 && searchStudWithEmail.length<1">
     <tr *ngFor="let item of studentDetails" class="edit-delete-icons">
       <td>
         <img
@@ -70,32 +125,48 @@
         </div>
       </td>
     </tr>
-  </table>
+  </tbody>
+</table>
 
-  <div class="buttons">
-    <select [(ngModel)]="dataPerPage" (change)="selectCount($event)">
-      <option *ngFor="let options of counts">{{ options }}</option>
-    </select>
+<div class="buttons"  *ngIf="searchStudWithName.length < 1 && searchStudWithEmail.length<1" >
+  <select [(ngModel)]="dataPerPage" (change)="selectCount($event)">
+    <option *ngFor="let options of counts">{{ options }}</option>
+  </select>
 
-    <button [disabled]="currentPageNumber == 1" (click)="previousPage()">
-      <fa-icon [icon]="leftArrow"></fa-icon>
-    </button>
-    <div class="container">
-      <div class="number">{{ currentPageNumber }}</div>
-    </div>
-    <button (click)="nextPage()" [disabled]="currentPageNumber == totalpages">
-      <fa-icon [icon]="rightArrow"></fa-icon>
-    </button>
-    <div class="extra">
-      <h6 (click)="goToDummyData()">Show Dummy Data</h6>
-
-      <fa-icon
-        class="comment"
-        (click)="showArraymethodPopup()"
-        [icon]="comment"
-      ></fa-icon>
-    </div>
-  </div>
-  <button class="addStudentButton" (click)="showDummyDataPopup()">
-    <fa-icon [icon]="faAdd"></fa-icon>
+  <button [disabled]="currentPageNumber == 1" (click)="previousPage()">
+    <fa-icon [icon]="leftArrow"></fa-icon>
   </button>
+  <div class="container">
+    <div class="number">{{ currentPageNumber }}</div>
+  </div>
+  <button (click)="nextPage()" [disabled]="currentPageNumber == totalpages ">
+    <fa-icon [icon]="rightArrow"></fa-icon>
+  </button>
+  <div class="extra">
+    <h6 (click)="goToDummyData()">Show Dummy Data</h6>
+    <fa-icon
+      class="comment"
+      (click)="showArraymethodPopup()"
+      [icon]="comment"
+    ></fa-icon>
+  </div>
+</div>
+
+<div class="buttons"  *ngIf="searchStudWithName.length >0 || searchStudWithEmail.length>0" >
+  <select [(ngModel)]="dataPerPage" (change)="selectCountForSearchedStud($event)">
+    <option *ngFor="let options of counts">{{ options }}</option>
+  </select>
+
+  <button [disabled]="currentPageNumberforsearchedStud == 1 " (click)="previousPageForSearchedStud()">
+    <fa-icon [icon]="leftArrow"></fa-icon>
+  </button>
+  <div class="container">
+    <div class="number">{{ currentPageNumberforsearchedStud }}</div>
+  </div>
+  <button (click)="nextPageforSearchedStud()" [disabled]="currentPageNumberforsearchedStud == totalPagesforSearchedStud ">
+    <fa-icon [icon]="rightArrow"></fa-icon>
+  </button>
+</div>
+<button class="addStudentButton" (click)="showDummyDataPopup()">
+  <fa-icon [icon]="faAdd"></fa-icon>
+</button>

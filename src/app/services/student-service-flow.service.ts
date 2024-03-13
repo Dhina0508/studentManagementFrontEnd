@@ -39,6 +39,18 @@ export class StudentServiceFlowService {
     );
   }
 
+  searchStudent(data:string,type:string,page:number,count:number):Observable<any>{
+    if(type=="name"){
+    return this.http.get<any>(
+      environments.APIENDPOINT+constants.ENDPOINTS.STUDENT+'?name='+data+'&page='+page+'&count='+count
+    );
+    }
+      return this.http.get<any>(
+        environments.APIENDPOINT+constants.ENDPOINTS.STUDENT+'?email='+data
+      );
+    
+  }
+
   getStudentsInfoById(id: number): Observable<StudentResponseModel> {
     return this.http.get<StudentResponseModel>(
       environments.APIENDPOINT + constants.ENDPOINTS.STUDENT + id

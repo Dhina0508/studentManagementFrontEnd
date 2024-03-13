@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChanges } from '@angular/core';
 import {
   StudentInfoModel,
 } from 'src/app/models/studentInfo';
 import { StudentServiceFlowService } from 'src/app/services/student-service-flow.service';
-import { faAdd,faEdit, faTrash,faArrowRightFromBracket ,faArrowRight,faArrowLeft,  faSort, faSearch, faMessage, faSortAlphaAsc} from '@fortawesome/free-solid-svg-icons';
+import { faAdd,faEdit, faTrash,faArrowRightFromBracket ,faArrowRight,faArrowLeft,  faSort, faSearch, faMessage, faSortAlphaAsc, faBell} from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -19,10 +19,14 @@ currentPageNumber:number=1;
 counts:any=[5,10,20,50]
 dataPerPage:number=this.counts[0]
 totalpages:number=0;
+
 totalData:number=0;
 id:number=0;
 imageUrl:any;
 isSortOpt:boolean=false;
+isSearched:boolean=false;
+totalPagesforSearchedStud:number=0;
+currentPageNumberforsearchedStud:number=1;
 
   faAdd = faAdd;
   faEdit = faEdit;
@@ -30,15 +34,19 @@ isSortOpt:boolean=false;
   faLogout=faArrowRightFromBracket;
   rightArrow=faArrowRight;
   leftArrow=faArrowLeft;
-  comment=faMessage;
+  comment=faBell;
   search=faSearch;
   sort=faSortAlphaAsc;
 
   
   studentInfo: StudentInfoModel[] = [];
   studentDetails: StudentInfoModel[] = [];
-
+  searchedStudents: StudentInfoModel[] = [];
   public studentData=new Subject<StudentInfoModel[]>();
+  searchStudWithName : string = '';
+  searchStudWithEmail : string = '';
+
+
   constructor(
     public studentservice: StudentServiceFlowService,
     private router: Router,public loadingService:LoadingService,
@@ -51,6 +59,7 @@ isSortOpt:boolean=false;
       this.studentDetails=res;
      })
   }
+
 
   loadAllStudentInfo() {
     this.studentservice.getAllStudentsInfo(this.dataPerPage,this.currentPageNumber).subscribe(
@@ -120,6 +129,7 @@ this.loadAllStudentInfo();
           }
         }
 
+
         getTotalPages():number{
             if(this.studentInfo){
               return Math.ceil(this.totalData/this.dataPerPage)
@@ -178,6 +188,7 @@ closeArrayMethodPopup() {
 toggleButton(){
   this.isSortOpt=!this.isSortOpt;
 }
+
 count:number=1
 sortName(){
   this.count=this.count+1;
@@ -209,4 +220,75 @@ sortEmail(){
   this.toggleButton();
   
 }
+// filteredStudentsWithName(): void {
+//   this.searchedStudents = this.studentDetails.filter(student =>
+//     student.fullName.toLowerCase().includes(this.searchStudWithName.toLowerCase())
+//   );
+// }
+
+// filteredStudentsWithEmail(): void {
+//   this.searchedStudents = this.studentDetails.filter(student =>
+//     student.email.toLowerCase().includes(this.searchStudWithEmail.toLowerCase())
+//   );
+// }
+
+toggleSearchButton(){
+  this.isSearched=!this.isSearched;
+  this.toggleButton();
+}
+
+searchStudentInfo(){
+
+  this.studentservice.searchStudent(this.searchStudWithName!=''? this.searchStudWithName:this.searchStudWithEmail,this.searchStudWithName!=''?'name':'email',this.currentPageNumberforsearchedStud,this.dataPerPage).subscribe(
+    (res: any) => {
+      if(res.data.length>0){
+      this.searchedStudents = res.data;
+      this.totalData=res.total_data;
+      this.totalPagesforSearchedStud=this.getTotalPagesforSearchedStud();
+      console.log(res.data)
+
+      }else{
+        alert("Student Not Found")
+      }
+    },
+    (error) => {
+      alert('Error Occured' + JSON.stringify(error.message));
+      console.log(error.message);
+      
+    }
+  )
+
+}
+
+getTotalPagesforSearchedStud():number{
+  if(this.searchedStudents){
+    return Math.ceil(this.totalData/this.dataPerPage)
+  }
+  return 0;
+}
+
+selectCountForSearchedStud(event: Event):void {
+  let target=event.target as HTMLSelectElement;
+  this.dataPerPage=parseInt(target.value);
+  this.currentPageNumberforsearchedStud=1;
+  this.searchStudentInfo();
+ 
+  
+  }
+
+  nextPageforSearchedStud():void{
+    if(this.currentPageNumberforsearchedStud<this.totalPagesforSearchedStud){
+this.currentPageNumberforsearchedStud++;
+this.searchStudentInfo();
+}
+  }
+
+  previousPageForSearchedStud():void{
+    if(this.currentPageNumberforsearchedStud>1){
+this.currentPageNumberforsearchedStud--;
+this.searchStudentInfo();
+}
+  }
+
+
 }
